@@ -20,3 +20,8 @@ export interface NavItem {
   title: string;
   url: string;
 }
+export interface ReviewItem {
+  position: string;
+  description: string;
+  author: string;
+}

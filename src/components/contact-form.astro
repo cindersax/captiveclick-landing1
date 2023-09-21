@@ -1,0 +1,57 @@
+---
+import Icon from "astro-icon";
+import ContentSection from "./content-section.astro";
+---
+
+<ContentSection title="🚀 Unlock High-Quality Leads Now" id="contact">
+  <Fragment slot="lead">
+    Ready for more clients? Drop your info and let's set up a consult
+  </Fragment>
+  <div class="mx-auto w-full lg:py-16">
+    <form action="#" class="mx-auto flex w-full max-w-4xl flex-col space-y-8">
+      <div>
+        <label for="name" class="mb-2 block font-medium text-sm"
+          >Your name</label
+        >
+        <input
+          type="text"
+          id="name"
+          class="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border border-gray-300 p-2.5 shadow-sm text-sm"
+          placeholder="your name"
+          required
+        />
+      </div>
+      <div>
+        <label for="email" class="mb-2 block font-medium text-sm"
+          >Your email</label
+        >
+        <input
+          type="text"
+          id="email"
+          class="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border border-gray-300 p-2.5 shadow-sm text-sm"
+          placeholder="example@captiveclick.com"
+          required
+        />
+      </div>
+      <div>
+        <label for="company" class="mb-2 block font-medium text-sm"
+          >Your Company</label
+        >
+        <input
+          type="text"
+          id="company"
+          class="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-lg border border-gray-300 p-2.5 shadow-sm text-sm"
+          placeholder="your company"
+          required
+        />
+      </div>
+      <button
+        type="submit"
+        class="flex items-center justify-center gap-3 border-2 border-current px-6 py-4 hover:text-indigo-500"
+      >
+        <Icon pack="mdi" name="calendar-clock" class="h-8" />
+        <span>Select a time</span>
+      </button>
+    </form>
+  </div>
+</ContentSection>
