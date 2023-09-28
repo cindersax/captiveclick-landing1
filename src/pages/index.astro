@@ -2,6 +2,7 @@
 import "@fontsource-variable/inter";
 import Compatibility from "~/components/compatibility.astro";
 import ContactForm from "~/components/contact-form.astro";
+import ContentSection from "~/components/content-section.astro";
 import Features from "~/components/features.astro";
 import Footer from "~/components/footer.astro";
 import Header from "~/components/header.astro";
@@ -9,6 +10,7 @@ import Intro from "~/components/intro.astro";
 import Showcase from "~/components/showcase.astro";
 import Splash from "~/components/splash.astro";
 import Testimonials from "~/components/testimonials.astro";
+import YoutubeEmbed from "~/components/youtube-embed.astro";
 import "~/styles/index.css";
 
 const { generator, site } = Astro;
@@ -69,8 +71,11 @@ const description =
       <Intro />
       <Features />
       <Testimonials />
-
-      <Showcase />
+      <ContentSection title="How it works" id="showcase">
+        <div class="w-full max-w-6xl space-y-2">
+          <YoutubeEmbed videoId="oHg5SJYRHA0" />
+        </div>
+      </ContentSection>
       <ContactForm />
     </div>
     <Footer />

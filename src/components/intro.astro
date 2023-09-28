@@ -4,7 +4,7 @@ import ContentSection from "~/components/content-section.astro";
 ---
 
 <ContentSection title="Say Hello to Meetings That Matter" id="intro">
-  <Icon slot="eyebrow" name="logomark" class="h-32" />
+  <Icon slot="eyebrow" name="logomark" class="cursor-clicking h-32" />
   <Fragment slot="lead">
     Get <span class="text-primary">meetings with interested clients</span>
      directly in your calendar, no more crafting emails or silent inboxes. Our <span
@@ -14,10 +14,10 @@ import ContentSection from "~/components/content-section.astro";
   <div class="grid grid-cols-1 gap-2">
     <a
       href="#contact"
-      class="flex items-center justify-center gap-3 border-2 border-current px-6 py-4"
+      class="flex items-center justify-center gap-3 border-2 border-primary bg-primary px-6 py-4 text-white hover:border-secondary"
     >
       <Icon pack="mdi" name="rocket" class="h-8" />
-      <span> Schedule a meeting!</span>
+      <span>Schedule a meeting!</span>
     </a>
   </div>
 </ContentSection>

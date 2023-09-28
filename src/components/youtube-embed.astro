@@ -1,0 +1,85 @@
+---
+export interface Props {
+  videoId: string;
+  allowFullscreen?: boolean;
+  allowAutoplay?: boolean;
+  showRelated?: boolean;
+  ccLoadPolicy?: boolean;
+  color?: "white" | "red";
+  controls?: boolean;
+  disablekb?: boolean;
+  enablejsapi?: boolean;
+  end?: number;
+  hl?: string;
+  ivLoadPolicy?: number;
+  loop?: boolean;
+  modestbranding?: boolean;
+  start?: number;
+  playsinline?: boolean;
+}
+
+const defaults = {
+  allowFullscreen: false,
+  allowAutoplay: false,
+  showRelated: false,
+  ccLoadPolicy: false,
+  color: "red",
+  controls: false,
+  disablekb: true,
+  enablejsapi: false,
+  end: null,
+  hl: null,
+  ivLoadPolicy: 3,
+  loop: false,
+  modestbranding: true,
+  start: null,
+  playsinline: true,
+};
+
+const {
+  videoId,
+  allowFullscreen = defaults.allowFullscreen,
+  allowAutoplay = defaults.allowAutoplay,
+  showRelated = defaults.showRelated,
+  ccLoadPolicy = defaults.ccLoadPolicy,
+  color = defaults.color,
+  controls = defaults.controls,
+  disablekb = defaults.disablekb,
+  enablejsapi = defaults.enablejsapi,
+  end = defaults.end,
+  hl = defaults.hl,
+  ivLoadPolicy = defaults.ivLoadPolicy,
+  loop = defaults.loop,
+  modestbranding = defaults.modestbranding,
+  start = defaults.start,
+  playsinline = defaults.playsinline,
+} = Astro.props;
+---
+
+<div class="relative w-full" style="padding-top: 56.25%;">
+  <iframe
+    class="absolute left-0 top-0 h-full w-full rounded-lg shadow-md"
+    src={`https://www.youtube.com/embed/${videoId}?rel=${
+      showRelated ? "1" : "0"
+    }
+    &autoplay=${allowAutoplay ? "1" : "0"}
+    &fs=${allowFullscreen ? "1" : "0"}
+    ${ccLoadPolicy ? `&cc_load_policy=1` : ""}
+    ${color ? `&color=${color}` : ""}
+    ${controls === false ? `&controls=0` : ""}
+    ${disablekb ? `&disablekb=1` : ""}
+    ${enablejsapi ? `&enablejsapi=1` : ""}
+    ${end ? `&end=${end}` : ""}
+    ${hl ? `&hl=${hl}` : ""}
+    ${ivLoadPolicy ? `&iv_load_policy=${ivLoadPolicy}` : ""}
+    ${loop ? `&loop=1` : ""}
+    ${modestbranding ? `&modestbranding=1` : ""}
+    ${start ? `&start=${start}` : ""}
+    ${playsinline ? `&playsinline=1` : ""}
+    `}
+    frameborder="0"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen={allowFullscreen}
+  >
+  </iframe>
+</div>

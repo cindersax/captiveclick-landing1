@@ -17,3 +17,19 @@
   --color-background-offset: theme("colors.gray.800");
   --color-border: theme("colors.gray.50" / 10%);
 }
+
+@keyframes click {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(
+      0.95
+    ); /* ligeramente más pequeño para simular el "presionado" */
+  }
+}
+
+.cursor-clicking {
+  animation: click 3; /* Repetir la animación indefinidamente */
+}
