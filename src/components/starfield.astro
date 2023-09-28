@@ -3,103 +3,282 @@
 </div>
 
 <script>
-  import invariant from "tiny-invariant";
+  var canvas = document.getElementById("starfield-canvas"),
+    can_w = parseInt(canvas.getAttribute("width")),
+    can_h = parseInt(canvas.getAttribute("height")),
+    ctx = canvas.getContext("2d");
 
-  const COUNT = 800;
-  const SPEED = 0.1;
+  // console.log(typeof can_w);
+  var BALL_NUM = 60;
 
-  class Star {
-    x: number;
-    y: number;
-    z: number;
-    xPrev: number;
-    yPrev: number;
+  var ball = {
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      r: 0,
+      alpha: 1,
+      phase: 0,
+    },
+    ball_color = {
+      r: 248,
+      g: 113,
+      b: 113,
+    },
+    R = 2,
+    balls = [],
+    alpha_f = 0.03,
+    alpha_phase = 0,
+    // Line
+    link_line_width = 0.8,
+    dis_limit = 260,
+    add_mouse_point = true,
+    mouse_in = false,
+    mouse_ball = {
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      r: 0,
+      type: "mouse",
+    };
 
-    constructor(x = 0, y = 0, z = 0) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
-      this.xPrev = x;
-      this.yPrev = y;
+  // Random speed
+  function getRandomSpeed(pos) {
+    var min = -1,
+      max = 1;
+    switch (pos) {
+      case "top":
+        return [randomNumFrom(min, max), randomNumFrom(0.1, max)];
+        break;
+      case "right":
+        return [randomNumFrom(min, -0.1), randomNumFrom(min, max)];
+        break;
+      case "bottom":
+        return [randomNumFrom(min, max), randomNumFrom(min, -0.1)];
+        break;
+      case "left":
+        return [randomNumFrom(0.1, max), randomNumFrom(min, max)];
+        break;
+      default:
+        return;
+        break;
     }
+  }
+  function randomArrayItem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+  function randomNumFrom(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  console.log(randomNumFrom(0, 10));
+  // Random Ball
+  function getRandomBall() {
+    var pos = randomArrayItem(["top", "right", "bottom", "left"]);
+    switch (pos) {
+      case "top":
+        return {
+          x: randomSidePos(can_w),
+          y: -R,
+          vx: getRandomSpeed("top")[0],
+          vy: getRandomSpeed("top")[1],
+          r: R,
+          alpha: 1,
+          phase: randomNumFrom(0, 10),
+        };
+        break;
+      case "right":
+        return {
+          x: can_w + R,
+          y: randomSidePos(can_h),
+          vx: getRandomSpeed("right")[0],
+          vy: getRandomSpeed("right")[1],
+          r: R,
+          alpha: 1,
+          phase: randomNumFrom(0, 10),
+        };
+        break;
+      case "bottom":
+        return {
+          x: randomSidePos(can_w),
+          y: can_h + R,
+          vx: getRandomSpeed("bottom")[0],
+          vy: getRandomSpeed("bottom")[1],
+          r: R,
+          alpha: 1,
+          phase: randomNumFrom(0, 10),
+        };
+        break;
+      case "left":
+        return {
+          x: -R,
+          y: randomSidePos(can_h),
+          vx: getRandomSpeed("left")[0],
+          vy: getRandomSpeed("left")[1],
+          r: R,
+          alpha: 1,
+          phase: randomNumFrom(0, 10),
+        };
+        break;
+    }
+  }
+  function randomSidePos(length) {
+    return Math.ceil(Math.random() * length);
+  }
 
-    update(width: number, height: number, speed: number) {
-      this.xPrev = this.x;
-      this.yPrev = this.y;
-      this.z += speed * 0.0675;
-      this.x += this.x * (speed * 0.0225) * this.z;
-      this.y += this.y * (speed * 0.0225) * this.z;
-      if (
-        this.x > width / 2 ||
-        this.x < -width / 2 ||
-        this.y > height / 2 ||
-        this.y < -height / 2
-      ) {
-        this.x = Math.random() * width - width / 2;
-        this.y = Math.random() * height - height / 2;
-        this.xPrev = this.x;
-        this.yPrev = this.y;
-        this.z = 0;
+  // Draw Ball
+  function renderBalls() {
+    Array.prototype.forEach.call(balls, function (b) {
+      if (!b.hasOwnProperty("type")) {
+        ctx.fillStyle =
+          "rgba(" +
+          ball_color.r +
+          "," +
+          ball_color.g +
+          "," +
+          ball_color.b +
+          "," +
+          b.alpha +
+          ")";
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, R, 0, Math.PI * 2, true);
+        ctx.closePath();
+        ctx.fill();
+      }
+    });
+  }
+
+  // Update balls
+  function updateBalls() {
+    var new_balls = [];
+    Array.prototype.forEach.call(balls, function (b) {
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.x > -50 && b.x < can_w + 50 && b.y > -50 && b.y < can_h + 50) {
+        new_balls.push(b);
+      }
+
+      // alpha change
+      b.phase += alpha_f;
+      b.alpha = Math.abs(Math.cos(b.phase));
+      // console.log(b.alpha);
+    });
+
+    balls = new_balls.slice(0);
+  }
+
+  // loop alpha
+  function loopAlphaInf() {}
+
+  // Draw lines
+  function renderLines() {
+    var fraction, alpha;
+    for (var i = 0; i < balls.length; i++) {
+      for (var j = i + 1; j < balls.length; j++) {
+        fraction = getDisOf(balls[i], balls[j]) / dis_limit;
+
+        if (fraction < 1) {
+          alpha = (1 - fraction).toString();
+
+          ctx.strokeStyle = "rgba(150,150,150," + alpha + ")";
+          ctx.lineWidth = link_line_width;
+
+          ctx.beginPath();
+          ctx.moveTo(balls[i].x, balls[i].y);
+          ctx.lineTo(balls[j].x, balls[j].y);
+          ctx.stroke();
+          ctx.closePath();
+        }
       }
     }
+  }
 
-    draw(ctx: CanvasRenderingContext2D) {
-      ctx.lineWidth = this.z;
-      ctx.beginPath();
-      ctx.moveTo(this.x, this.y);
-      ctx.lineTo(this.xPrev, this.yPrev);
-      ctx.stroke();
+  // calculate distance between two points
+  function getDisOf(b1, b2) {
+    var delta_x = Math.abs(b1.x - b2.x),
+      delta_y = Math.abs(b1.y - b2.y);
+
+    return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+  }
+
+  // add balls if there a little balls
+  function addBallIfy() {
+    if (balls.length < BALL_NUM) {
+      balls.push(getRandomBall());
     }
   }
 
-  const stars = Array.from({ length: COUNT }, () => new Star(0, 0, 0));
-  let rafId = 0;
+  // Render
+  function render() {
+    ctx.clearRect(0, 0, can_w, can_h);
 
-  const canvas = document.querySelector(
-    "#starfield-canvas",
-  ) as HTMLCanvasElement;
-  invariant(canvas, "canvas should not be null");
-  const ctx = canvas.getContext("2d");
+    renderBalls();
 
-  const container = document.querySelector("#starfield") as HTMLElement;
-  invariant(container, "container should not be null");
-  const resizeObserver = new ResizeObserver(setup);
-  resizeObserver.observe(container);
+    renderLines();
 
-  function setup() {
-    invariant(ctx, "canvas context should not be null");
-    rafId > 0 && cancelAnimationFrame(rafId);
+    updateBalls();
 
-    const { clientWidth: width, clientHeight: height } = container;
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    ctx.scale(dpr, dpr);
+    addBallIfy();
 
-    for (const star of stars) {
-      star.x = Math.random() * width - width / 2;
-      star.y = Math.random() * height - height / 2;
-      star.z = 0;
-    }
-
-    ctx.translate(width / 2, height / 2);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-    ctx.strokeStyle = "white";
-    rafId = requestAnimationFrame(frame);
+    window.requestAnimationFrame(render);
   }
 
-  function frame() {
-    invariant(ctx, "canvas context should not be null");
-    const { clientWidth: width, clientHeight: height } = container;
-
-    for (const star of stars) {
-      star.update(width, height, SPEED);
-      star.draw(ctx);
+  // Init Balls
+  function initBalls(num) {
+    for (var i = 1; i <= num; i++) {
+      balls.push({
+        x: randomSidePos(can_w),
+        y: randomSidePos(can_h),
+        vx: getRandomSpeed("top")[0],
+        vy: getRandomSpeed("top")[1],
+        r: R,
+        alpha: 1,
+        phase: randomNumFrom(0, 10),
+      });
     }
-
-    ctx.fillRect(-width / 2, -height / 2, width, height);
-    rafId = requestAnimationFrame(frame);
   }
+  // Init Canvas
+  function initCanvas() {
+    canvas.setAttribute("width", window.innerWidth);
+    canvas.setAttribute("height", window.innerHeight);
+
+    can_w = parseInt(canvas.getAttribute("width"));
+    can_h = parseInt(canvas.getAttribute("height"));
+  }
+  window.addEventListener("resize", function (e) {
+    console.log("Window Resize...");
+    initCanvas();
+  });
+
+  function goMovie() {
+    initCanvas();
+    initBalls(BALL_NUM);
+    window.requestAnimationFrame(render);
+  }
+  goMovie();
+
+  // Mouse effect
+  canvas.addEventListener("mouseenter", function () {
+    console.log("mouseenter");
+    mouse_in = true;
+    balls.push(mouse_ball);
+  });
+  canvas.addEventListener("mouseleave", function () {
+    console.log("mouseleave");
+    mouse_in = false;
+    var new_balls = [];
+    Array.prototype.forEach.call(balls, function (b) {
+      if (!b.hasOwnProperty("type")) {
+        new_balls.push(b);
+      }
+    });
+    balls = new_balls.slice(0);
+  });
+  canvas.addEventListener("mousemove", function (e) {
+    var e = e || window.event;
+    mouse_ball.x = e.pageX;
+    mouse_ball.y = e.pageY;
+    // console.log(mouse_ball);
+  });
 </script>
