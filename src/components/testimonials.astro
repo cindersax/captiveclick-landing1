@@ -4,22 +4,25 @@ import type { ReviewItem } from "~/types";
 
 const reviews: Array<ReviewItem> = [
   {
+    avatar: "./src/assets/Frank.jpeg",
     description:
       "The balance of casual and professional in their approach is just perfect. We've secured some of our best clients through their outreach.",
-    author: "Jane Smith",
-    position: "Head of Sales at B2BServices",
+    author: "Frank Hedman",
+    position: "Digital Marketer, Ventim",
   },
   {
+    avatar: "./src/assets/Edda.jpeg",
     description:
       "I was skeptical at first, but the results speak for themselves. Our outreach efforts are now more consistent and effective.",
-    author: "Grace Kim",
-    position: "COO of TechForward",
+    author: "Edda CarlHenricsdotter",
+    position: "Network manager, Kunskapspartner",
   },
   {
+    avatar: "./src/assets/Jeanette.jpeg",
     description:
       "Their team knows their stuff. We've seen some encouraging results in our outreach.",
-    author: "James Thompson",
-    position: "Strategy Lead at HealthFirst",
+    author: "Jeanette Maria",
+    position: "Sales manager, Black PRI",
   },
 ];
 ---
@@ -31,12 +34,12 @@ const reviews: Array<ReviewItem> = [
   </Fragment>
   <div class="mt-8 grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
     {
-      reviews.map(({ position, description, author }) => (
+      reviews.map(({ avatar, position, description, author }) => (
         <blockquote class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
           <div class="flex items-center gap-4">
             <img
               alt="Man"
-              src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+              src={avatar}
               class="h-14 w-14 rounded-full object-cover"
             />
 
