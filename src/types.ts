@@ -21,7 +21,7 @@ export interface NavItem {
   url: string;
 }
 export interface ReviewItem {
-  avatar: string;
+  avatar: ImageMetadata;
   position: string;
   description: string;
   author: string;
