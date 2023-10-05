@@ -1,10 +1,11 @@
 ---
-import { Picture } from "@astrojs/image/components";
+
 import ContentSection from "~/components/content-section.astro";
 import type { ReviewItem } from "~/types";
 import frankImage from "~/assets/Frank.jpeg";
 import eddaImage from "~/assets/Edda.jpeg";
 import jeanetteImage from "~/assets/Jeanette.jpeg";
+import { Image } from "astro:assets";
 
 const reviews: Array<ReviewItem> = [
   {
@@ -41,7 +42,7 @@ const reviews: Array<ReviewItem> = [
       reviews.map(({ avatar, position, description, author }) => (
         <blockquote class="rounded-lg bg-gray-50 p-6 shadow-sm sm:p-8">
           <div class="flex items-center gap-4">
-            <Picture
+            <Image
               style={{
                 minHeight: "70px",
                 minWidth: "70px",
@@ -52,7 +53,6 @@ const reviews: Array<ReviewItem> = [
                 borderRadius: "50%",
               }}
               src={avatar}
-              widths={[240, 240]}
               sizes="100px"
               loading="eager"
               alt="A floating astronaut in a space suit"

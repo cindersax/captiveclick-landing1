@@ -1,19 +1,18 @@
-import image from "@astrojs/image";
-import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
+
+
+import tailwind from "@astrojs/tailwind";
+import vercel from "@astrojs/vercel/serverless";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://www.captivateclick.com/",
-  integrations: [
-    tailwind(),
-    image({
-      serviceEntryPoint: "@astrojs/image/sharp",
-    }),
-  ],
-  vite: {
-    ssr: {
-      external: ["svgo"],
-    },
-  },
+  site: "https://example.com",
+  integrations: [ tailwind()],
+  output: "hybrid",
+  adapter: vercel({
+    // Vercel-specific options
+    webAnalytics:{
+      enabled: true
+    }
+  }),
 });
