@@ -47,15 +47,27 @@ import { Icon } from "astro-icon";
       ?.classList.remove("hidden");
   };
 
+  const updateBodyClass = () => {
+    const themeCurrent = getThemeCurrent();
+    if (themeCurrent === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  };
+
   button.addEventListener("click", () => {
     const themeNext = getThemeNext();
     document.documentElement.dataset.theme = themeNext;
     localStorage.setItem("theme", themeNext);
     updateIcon();
+    updateBodyClass();
   });
 
   updateIcon();
+  updateBodyClass();
 </script>
+
 
 <style>
   :global(.fixed-header) #theme-switcher {

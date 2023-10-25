@@ -1,0 +1,360 @@
+---
+import ContentSection from "./content-section.astro"
+
+---
+
+<style>
+	label {
+		display: block;
+		margin-bottom: 10px;
+	}
+	.tooltip {
+		transition: opacity 0.3s;
+	}
+</style>
+
+<ContentSection title="Email to Sales Calculator" id="calc">
+	<Fragment slot="lead">
+		Enter the details below to estimate the potential sales from your email campaigns.
+	</Fragment>
+	<div id="Calc" class="container mx-auto my-20 gap-5 sm:grid sm:grid-cols-1 md:grid-cols-2">
+		<div class="container max-w-xl p-8 dark:bg-gray-900">
+			<form id="calculatorForm" class="space-y-4">
+				<div class="group relative block">
+					<label for="companies_per_day" class="text-gray-600 dark:text-gray-400"
+						>How many companies do you email per day?</label
+					>
+					<input
+						type="number"
+						id="companies_per_day"
+						value="30"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="days_per_month" class="text-gray-600 dark:text-gray-400"
+						>How many days in a month do you send emails?</label
+					>
+					<input
+						type="number"
+						id="days_per_month"
+						value="20"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="email_opening_rate" class="text-gray-600 dark:text-gray-400"
+						>What's the email opening rate?</label
+					>
+					<input
+						type="number"
+						step="0.01"
+						id="email_opening_rate"
+						value="0.4"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="meeting_interest_rate" class="text-gray-600 dark:text-gray-400"
+						>What's the rate of recipients curious about scheduling a meeting?</label
+					>
+					<input
+						type="number"
+						step="0.01"
+						id="meeting_interest_rate"
+						value="0.2"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="dropout_percentage" class="text-gray-600 dark:text-gray-400"
+						>What percentage of interested leads drop out?</label
+					>
+					<input
+						type="number"
+						step="0.01"
+						id="dropout_percentage"
+						value="0.1"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="offer_conversion_rate" class="text-gray-600 dark:text-gray-400"
+						>What's the conversion rate from qualified leads to offers?</label
+					>
+					<input
+						type="number"
+						step="0.01"
+						id="offer_conversion_rate"
+						value="0.1"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="client_conversion_rate" class="text-gray-600 dark:text-gray-400"
+						>What's the conversion rate from offers to actual clients?</label
+					>
+					<input
+						type="number"
+						step="0.01"
+						id="client_conversion_rate"
+						value="0.8"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="avg_client_value" class="text-gray-600 dark:text-gray-400"
+						>What's the average revenue value you get from each client?</label
+					>
+					<input
+						type="number"
+						id="avg_client_value"
+						value="100000"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="group relative block">
+					<label for="meeting_cost_value" class="text-gray-600 dark:text-gray-400"
+						>What's the cost of each meeting?</label
+					>
+					<input
+						type="number"
+						id="meeting_cost_value"
+						value="500"
+						class="mt-1 w-full rounded-md border p-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+					/>
+				</div>
+	
+				<div class="mt-4">
+					<button
+						type="submit"
+						class="rounded w-full bg-blue-500 p-2 text-white hover:bg-blue-600 dark:hover:bg-blue-700"
+						>Calculate</button
+					>
+				</div>
+			</form>
+		</div>
+	
+		<section id="results" class="mt-8 hidden w-full grid-cols-2 gap-6 dark:bg-gray-800">
+			<!-- Card for Emails Sent -->
+			<article
+				class="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center">
+					<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+						<span class="text-3xl text-blue-500 dark:text-blue-300">📧</span>
+					</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Emails Sent</h3>
+					<p class="text-blue-500 dark:text-blue-300">
+						<span id="emails_sent" class="font-bold"></span> in a month
+					</p>
+				</div>
+			</article>
+	
+			<!-- Card for Emails Opened -->
+			<article
+				class="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center">
+					<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+						<span class="text-3xl text-blue-500 dark:text-blue-300">💌</span>
+					</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Emails Opened</h3>
+					<p class="text-blue-500 dark:text-blue-300">
+						<span id="emails_opened" class="font-bold"></span>
+					</p>
+				</div>
+			</article>
+	
+			<!-- Card for Number Interested in Meeting -->
+			<article
+				class="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center">
+					<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+						<span class="text-3xl text-blue-500 dark:text-blue-300">🤝</span>
+					</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+						Interested in Meeting
+					</h3>
+					<p class="text-blue-500 dark:text-blue-300">
+						<span id="interested_meeting" class="font-bold"></span>
+					</p>
+				</div>
+			</article>
+	
+			<!-- Card for Qualified Meetings -->
+			<article
+				class="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center">
+					<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+						<span class="text-3xl text-blue-500 dark:text-blue-300">✅</span>
+					</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+						Qualified Meetings
+					</h3>
+					<p class="text-blue-500 dark:text-blue-300">
+						<span id="qual_meetings" class="font-bold"></span>
+					</p>
+				</div>
+			</article>
+	
+			<!-- Card for Number of Offers Made -->
+			<article
+				class="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center">
+					<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+						<span class="text-3xl text-blue-500 dark:text-blue-300">📄</span>
+					</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Offers Made</h3>
+					<p class="text-blue-500 dark:text-blue-300">
+						<span id="offers_made" class="font-bold"></span>
+					</p>
+				</div>
+			</article>
+	
+			<!-- Card for Number of Clients -->
+			<article
+				class="transform rounded-lg bg-white p-6 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center">
+					<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+						<span class="text-3xl text-blue-500 dark:text-blue-300">👥</span>
+					</div>
+					<h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-200">
+						Number of Clients
+					</h3>
+					<p class="text-blue-500 dark:text-blue-300">
+						<span id="clients" class="font-bold"></span>
+					</p>
+				</div>
+			</article>
+	
+			<!-- Card for Total Revenue -->
+			<article
+				class="col-span-2 transform space-y-4 rounded-lg bg-white p-8 shadow-lg transition-transform hover:scale-105 dark:bg-gray-700"
+			>
+				<div class="flex flex-col items-center space-y-4">
+					<!-- Icon and Title -->
+					<div class="flex flex-col items-center space-y-2">
+						<div class="mb-4 rounded-full bg-blue-100 p-5 dark:bg-blue-900">
+							<span class="text-3xl text-blue-500 dark:text-blue-300">💰</span>
+						</div>
+						<h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Financial Overview</h3>
+					</div>
+	
+					<!-- Revenue Details -->
+					<div class="w-full space-y-3 border-b border-t py-4 dark:border-gray-600">
+						<!-- Total Revenue Display -->
+						<div class="flex items-center justify-between">
+							<h4 class="text-blue-500 dark:text-blue-300">Total Revenue:</h4>
+							<span id="revenue" class="font-bold text-blue-500 dark:text-blue-300"></span>
+						</div>
+	
+						<!-- Total Meeting Cost Display -->
+						<div class="flex items-center justify-between">
+							<h4 class="text-red-500 dark:text-red-300">Meetings Costs:</h4>
+							<span id="total_meeting_cost" class="font-bold text-red-500 dark:text-red-300"></span>
+						</div>
+	
+						<!-- Net Revenue Display -->
+						<div class="flex items-center justify-between">
+							<h4 class="text-green-500 dark:text-green-300">Net Revenue:</h4>
+							<span id="net_revenue" class="font-bold text-green-500 dark:text-green-300"></span>
+						</div>
+					</div>
+				</div>
+			</article>
+		</section>
+	
+		<script>
+			function formatNumber(num) {
+				// Round to closest integer if very close to an integer
+				const roundedNum = Math.round(num)
+				if (Math.abs(num - roundedNum) < 1e-10) {
+					return roundedNum.toLocaleString() // Using toLocaleString for thousands separator
+				}
+	
+				// Check if number is an integer
+				if (Number.isInteger(num)) {
+					return num.toLocaleString() // Using toLocaleString for thousands separator
+				} else {
+					// If not, return with 2 decimal places
+					return num.toFixed(2).toLocaleString() // Using toLocaleString after fixing decimal places
+				}
+			}
+	
+			function calculate() {
+				// Fetching values from the input fields
+				const companies_per_day = parseFloat(document.getElementById('companies_per_day').value)
+				const days_per_month = parseFloat(document.getElementById('days_per_month').value)
+				const email_opening_rate = parseFloat(document.getElementById('email_opening_rate').value)
+				const meeting_interest_rate = parseFloat(
+					document.getElementById('meeting_interest_rate').value
+				)
+				const dropout_percentage = parseFloat(document.getElementById('dropout_percentage').value)
+				const offer_conversion_rate = parseFloat(
+					document.getElementById('offer_conversion_rate').value
+				)
+				const client_conversion_rate = parseFloat(
+					document.getElementById('client_conversion_rate').value
+				)
+				const avg_client_value = parseFloat(document.getElementById('avg_client_value').value)
+				const meeting_cost = parseFloat(document.getElementById('meeting_cost_value').value)
+	
+				// Performing the calculations
+				const emails_sent = companies_per_day * days_per_month
+				const emails_opened = emails_sent * email_opening_rate
+				const interested_meeting = emails_opened * meeting_interest_rate
+				const qual_meetings = interested_meeting * (1 - dropout_percentage)
+				const offers_made = qual_meetings * offer_conversion_rate
+				const clients = offers_made * client_conversion_rate
+				const revenue = clients * avg_client_value
+	
+				// Calculate total meeting cost and net revenue
+				const total_meeting_cost = qual_meetings * meeting_cost
+				const net_revenue = revenue - total_meeting_cost
+	
+				// Displaying the results using formatNumber function
+				document.getElementById('emails_sent').innerText = formatNumber(emails_sent)
+				document.getElementById('emails_opened').innerText = formatNumber(emails_opened)
+				document.getElementById('interested_meeting').innerText = formatNumber(interested_meeting)
+				document.getElementById('qual_meetings').innerText = formatNumber(qual_meetings)
+				document.getElementById('offers_made').innerText = formatNumber(offers_made)
+				document.getElementById('clients').innerText = formatNumber(clients)
+				document.getElementById('revenue').innerText = '$' + formatNumber(revenue) // Added dollar sign
+				document.getElementById('total_meeting_cost').innerText =
+					'$' + formatNumber(total_meeting_cost) // Added dollar sign
+				document.getElementById('net_revenue').innerText = '$' + formatNumber(net_revenue)
+	
+				// Making the results visible
+				if (document.getElementById('results').classList.contains('hidden')) {
+					// If it does, remove the 'hidden' class to show it
+					document.getElementById('results').classList.add('grid')
+					document.getElementById('results').classList.remove('hidden')
+				}
+			}
+	
+			document.getElementById('calculatorForm').addEventListener('submit', function (event) {
+				// Prevent form from submitting and page from refreshing
+				event.preventDefault()
+	
+				// Call the calculate function
+				calculate()
+			})
+		</script>
+	</div>
+
+  </ContentSection>
+
+
