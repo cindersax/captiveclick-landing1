@@ -278,21 +278,27 @@ import ContentSection from "./content-section.astro"
 		</section>
 	
 		<script>
-			function formatNumber(num) {
-				// Round to closest integer if very close to an integer
-				const roundedNum = Math.round(num)
-				if (Math.abs(num - roundedNum) < 1e-10) {
-					return roundedNum.toLocaleString() // Using toLocaleString for thousands separator
-				}
-	
-				// Check if number is an integer
-				if (Number.isInteger(num)) {
-					return num.toLocaleString() // Using toLocaleString for thousands separator
-				} else {
-					// If not, return with 2 decimal places
-					return num.toFixed(2).toLocaleString() // Using toLocaleString after fixing decimal places
-				}
-			}
+function formatNumber(num) {
+    // Validation: Check if input is a number
+    if (typeof num !== 'number') {
+        throw new Error("Input is not a number");
+    }
+
+    // Get the number with two decimals
+    const formattedNum = num.toFixed(2);
+    
+    // If the two decimals are 0, return as integer
+    if (formattedNum.endsWith('.00')) {
+        return Math.round(num).toLocaleString();
+    }
+
+    // Otherwise, return the number with two decimals and thousands separator
+    return parseFloat(formattedNum).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+
+
+
 	
 			function calculate() {
 				// Fetching values from the input fields
