@@ -1,5 +1,8 @@
 ---
 import ContentSection from "./content-section.astro"
+import { Image } from "astro:assets";
+import robotImage from "~/assets/financial-robot.png";
+
 
 ---
 
@@ -142,7 +145,36 @@ import ContentSection from "./content-section.astro"
 				</div>
 			</form>
 		</div>
-	
+		<section id="placeholder" class=" w-full h-full flex flex-col items-center space-y-16 pt-8">
+
+			<!-- Sticky Card Container -->
+			<div class="sticky top-0 bg-white shadow-lg p-8 rounded-xl flex space-x-16 border border-gray-200 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-300">
+				<!-- Image -->
+				<div class="w-1/3">
+					<Image
+						class="object-cover"
+						src={robotImage}
+						loading="eager"
+						alt="A floating astronaut in a space suit"
+					/>
+				</div>
+				
+				<!-- Text content -->
+				<div class="flex flex-col justify-center space-y-4 w-1/2">
+					<h2 class="text-2xl font-bold dark:text-gray-100">Awaiting Your Input</h2>
+					<p class="text-gray-600 dark:text-gray-400">Enter the details to get an estimate of your potential sales. Your results will appear here after calculation.</p>
+				</div>
+			</div>
+			
+			<!-- Additional content or spacer to demonstrate stickiness -->
+			<div class="h-128 bg-gray-100 dark:bg-gray-700 mt-8"></div>
+		</section>
+		
+		
+		
+		
+		
+		
 		<section id="results" class="mt-8 hidden w-full grid-cols-2 gap-6 dark:bg-gray-800">
 			<!-- Card for Emails Sent -->
 			<article
@@ -278,23 +310,23 @@ import ContentSection from "./content-section.astro"
 		</section>
 	
 		<script>
-function formatNumber(num) {
-    // Validation: Check if input is a number
-    if (typeof num !== 'number') {
-        throw new Error("Input is not a number");
-    }
+				function formatNumber(num) {
+					// Validation: Check if input is a number
+					if (typeof num !== 'number') {
+						throw new Error("Input is not a number");
+					}
 
-    // Get the number with two decimals
-    const formattedNum = num.toFixed(2);
-    
-    // If the two decimals are 0, return as integer
-    if (formattedNum.endsWith('.00')) {
-        return Math.round(num).toLocaleString();
-    }
+					// Get the number with two decimals
+					const formattedNum = num.toFixed(2);
+					
+					// If the two decimals are 0, return as integer
+					if (formattedNum.endsWith('.00')) {
+						return Math.round(num).toLocaleString();
+					}
 
-    // Otherwise, return the number with two decimals and thousands separator
-    return parseFloat(formattedNum).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+					// Otherwise, return the number with two decimals and thousands separator
+					return parseFloat(formattedNum).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+				}
 
 
 
@@ -348,6 +380,8 @@ function formatNumber(num) {
 					// If it does, remove the 'hidden' class to show it
 					document.getElementById('results').classList.add('grid')
 					document.getElementById('results').classList.remove('hidden')
+					document.getElementById('placeholder').classList.remove('flex')
+					document.getElementById('placeholder').classList.add('hidden');
 				}
 			}
 	
