@@ -139,7 +139,7 @@ import robotImage from "~/assets/financial-robot.png";
 				<div class="mt-4">
 					<button
 						type="submit"
-						class="rounded w-full bg-blue-500 p-2 text-white hover:bg-blue-600 dark:hover:bg-blue-700"
+						class="rounded my-8 w-full bg-primary p-2 text-white hover:bg-primary hover:brightness-95 dark:hover:bg-primary"
 						>Calculate</button
 					>
 				</div>
@@ -384,6 +384,21 @@ import robotImage from "~/assets/financial-robot.png";
 					document.getElementById('placeholder').classList.add('hidden');
 				}
 			}
+			// Get the distance of the element from the top of the document
+function getElemDistanceFromTop(elem) {
+    let location = 0;
+    if (elem.offsetParent) {
+        do {
+            location += elem.offsetTop;
+            elem = elem.offsetParent;
+        } while (elem);
+    }
+    return location >= 0 ? location : 0;
+}
+
+// Smoothly scroll to the top of the results section
+const resultsTop = getElemDistanceFromTop(document.getElementById('results'));
+window.scrollTo({ top: resultsTop, behavior: 'smooth' });
 	
 			document.getElementById('calculatorForm').addEventListener('submit', function (event) {
 				// Prevent form from submitting and page from refreshing
