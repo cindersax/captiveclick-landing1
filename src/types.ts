@@ -1,3 +1,5 @@
+import type { ImageMetadata } from "astro";
+
 export interface CompatibilityItem {
   icon: string;
   title: string;
